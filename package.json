@@ -18,7 +18,7 @@
     "jshint": "^2.9.5"
   },
   "scripts": {
-    "start": "gulp",
+    "start": "node app",
     "build": "gulp sass"
   },
   "repository": {

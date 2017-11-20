@@ -112,7 +112,7 @@ selectNodeVersion
 # 3. Install NPM packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
-  eval $NPM_CMD install --production
+  eval $NPM_CMD install
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
@@ -128,32 +128,10 @@ if [ -e "$DEPLOYMENT_TARGET/bower.json" ]; then
   cd - > /dev/null
 fi
 
-# 5. Install Composer modules
-if [ -e "$DEPLOYMENT_TARGET/composer.json" ]; then
-  cd "$DEPLOYMENT_TARGET"
-  eval php composer.phar install
-  exitWithMessageOnError "composer failed"
-  cd - > /dev/null
-fi
-
-
 # 6. Run Gulp Task
 if [ -e "$DEPLOYMENT_TARGET/gulpfile.js" ]; then
   cd "$DEPLOYMENT_TARGET"
-  eval ./node_modules/.bin/gulp imagemin
+  eval ./node_modules/.bin/gulp &
   exitWithMessageOnError "gulp failed"
   cd - > /dev/null
 fi
-
-
-##################################################################################################################################
-
-# Post deployment stub
-if [[ -n "$POST_DEPLOYMENT_ACTION" ]]; then
-  POST_DEPLOYMENT_ACTION=${POST_DEPLOYMENT_ACTION//\"}
-  cd "${POST_DEPLOYMENT_ACTION_DIR%\\*}"
-  "$POST_DEPLOYMENT_ACTION"
-  exitWithMessageOnError "post deployment action failed"
-fi
-
-echo "Finished successfully."
